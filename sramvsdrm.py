@@ -1,16 +1,16 @@
 import tkinter as tk
 from tkinter import ttk, messagebox
+import matplotlib
 import matplotlib.pyplot as plt
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
-import matplotlib
 from collections import OrderedDict
 
 
+#Simülatör arayüzünü ve başlangıç değerlerini ayarlar.
 class MemorySimulator:
     def __init__(self, root):
-        """
-        Simülatör arayüzünü ve başlangıç değerlerini ayarlar.
-        """
+        
+        
         self.root = root
         self.root.title("SRAM/DRAM Simülatörü")
 
@@ -46,19 +46,17 @@ class MemorySimulator:
         # --- Arayüz Elemanları ---
         self.setup_ui()
 
-        # --- Metrikler, Tarihçe ve Görsel Konum Takibi ---
+        # --- Metrikler, Tarihçe ve Görsel Konum Takibi Sıfırlama---
         self.reset_metrics()
 
-        # --- Temiz Kapanma için ---
+        # --- Temiz Kapanmak için ---
         self.root.protocol("WM_DELETE_WINDOW", self.on_main_window_close)
 
 
 
         # arayüz elemanları oluşumu----
     def setup_ui(self):
-        """
-        Kullanıcı arayüzü elemanlarını (kontroller, bellek gridleri, grafik) oluşturur ve yerleştirir.
-        """
+        
         # Kontrol Paneli
         control_frame = ttk.Frame(self.root, padding="10")
         control_frame.grid(row=0, column=0, columnspan=2, sticky="ew")
@@ -92,17 +90,17 @@ class MemorySimulator:
         self.status_label.grid(row=4, column=0, columnspan=2, sticky="ew", padx=10, pady=5)
 
     def update_speed(self, val):
-        """
-        Animasyon hızı ölçeğinden gelen değere göre hızı günceller.
-        """
+        
+        #Animasyon hızı ölçeğinden gelen değere göre hızı günceller.
+        
         self.animation_speed = float(val)
         if hasattr(self, 'speed_label') and self.speed_label:
              self.speed_label.config(text=f"{int(val)}ms")
 
     def setup_memory_grids(self):
-        """
-        SRAM ve DRAM belleklerini temsil eden gridleri oluşturur.
-        """
+        
+        #SRAM ve DRAM belleklerini temsil eden gridleri oluşturur.
+        
         sram_frame = ttk.LabelFrame(self.root, text=f"SRAM (Önbellek {self.sram_rows}x{self.sram_cols}) - LRU")
         sram_frame.grid(row=2, column=0, padx=10, pady=10, sticky="nsew")
         self.sram_labels = self.create_grid(sram_frame, self.sram_rows, self.sram_cols)
@@ -112,9 +110,9 @@ class MemorySimulator:
         self.dram_labels = self.create_grid(dram_frame, self.dram_rows, self.dram_cols)
 
     def create_grid(self, parent, rows, cols):
-        """
-        Belirtilen boyutlarda bir etiket (label) gridi oluşturur.
-        """
+        
+        # Belirtilen boyutlardaki kutucuklardan bir tablo oluşturur.
+       
         labels = []
         for i in range(rows):
             row_labels = []
@@ -127,12 +125,9 @@ class MemorySimulator:
 
     
     # setup_chart FONKSİYONU canlı çizgi grafiği için
-    
 
     def setup_chart(self):
-        """
-        Matplotlib kullanarak canlı performans grafiği ayarlanır
-        """
+       
         self.fig, self.ax1 = plt.subplots(figsize=(6, 4))
         self.ax2 = self.ax1.twinx()
         self.canvas = FigureCanvasTkAgg(self.fig, master=self.root)
@@ -140,7 +135,7 @@ class MemorySimulator:
         self.canvas_widget.grid(row=3, column=0, columnspan=2, padx=10, pady=10, sticky="nsew")
         self.fig.suptitle("Bellek Performansı ve Kullanımı")
 
-        # Sol Y ekseni (Sadece Gecikme)
+        # Sol Y ekseni (Gecikme)
         self.ax1.set_xlabel("Adım Sayısı")
         self.ax1.set_ylabel("Toplam Gecikme (ns)", color='royalblue') # Etiket güncellendi
         self.ax1.tick_params(axis='y', labelcolor='royalblue')
@@ -151,12 +146,9 @@ class MemorySimulator:
         self.ax2.tick_params(axis='y', labelcolor='red')
         self.ax2.grid(True, axis='y', linestyle='--')
 
-        # --- Çizgileri oluştur (SADECE GECİKME ve ENERJİ) ---
+        # --- Çizgileri oluştur (GECİKME ve ENERJİ) ---
         self.line_sram_delay, = self.ax1.plot([], [], label='SRAM Gecikme (ns)', color='blue')
         self.line_dram_delay, = self.ax1.plot([], [], label='DRAM Gecikme (ns)', color='darkorange')
-        # Erişim çizgileri kaldırıldı
-        # self.line_sram_access, = self.ax1.plot([], [], label='SRAM Erişim Sayısı', color='cyan', linestyle='--')
-        # self.line_dram_access, = self.ax1.plot([], [], label='DRAM Erişim Sayısı', color='teal', linestyle='--')
         self.line_sram_energy, = self.ax2.plot([], [], label='SRAM Enerji (pJ)', color='cornflowerblue')
         self.line_dram_energy, = self.ax2.plot([], [], label='DRAM Enerji (pJ)', color='orange')
 
@@ -166,15 +158,12 @@ class MemorySimulator:
         self.ax1.legend(lines1 + lines2, labels1 + labels2, loc='upper left')
 
         self.canvas.draw()
-    # ================================================================
-    # /setup_chart FONKSİYONU
-    # ================================================================
 
 
     def reset_metrics(self):
-        """
-        Tüm performans metriklerini, önbelleği ve geçmiş verilerini sıfırlar.
-        """
+        
+        # Tüm performans metriklerini, önbelleği ve geçmiş verilerini sıfırlar.
+        
         self.sram_access_count = 0
         self.dram_access_count = 0
         self.sram_write_count = 0
@@ -194,7 +183,6 @@ class MemorySimulator:
 
     # --- start_simulation, pause_simulation, step_simulation ---
 
-    #-------- HATA YÖNETİMİ ----------#
     def start_simulation(self):
         input_text = self.entry.get().strip().upper()
         if not input_text: messagebox.showwarning("Uyarı", "Lütfen bir metin girin!"); return
@@ -214,7 +202,7 @@ class MemorySimulator:
         if self.simulation_running: self.pause_simulation()
         self.process_next_char(single_step=True)
 
-    # --- process_next_char  ---
+    # --- işlemlere başlama  ---
     def process_next_char(self, single_step=False):
         if not self.simulation_running and not single_step: return
         if self.input_iterator is None: self.update_status("Lütfen önce 'Başlat' veya geçerli bir metinle 'Adım' kullanın."); return
@@ -256,7 +244,7 @@ class MemorySimulator:
              if self._after_id: self.root.after_cancel(self._after_id); self._after_id = None
              self.update_charts(); import traceback; traceback.print_exc()
 
-    # --- find_empty_cell ---
+    # --- boş kutucuk buma ---
     def find_empty_cell(self, grid_labels):
         rows = len(grid_labels); cols = len(grid_labels[0]) if rows > 0 else 0
         for r in range(rows):
@@ -302,7 +290,7 @@ class MemorySimulator:
             status_msg += f"D-Gecikme: {step_dram_delay}ns, D-Enerji: {step_dram_energy:.1f}pJ, S-Enerji: {step_sram_energy:.1f}pJ"
         return step_sram_delay, step_sram_energy, step_dram_delay, step_dram_energy, status_msg
 
-    # --- highlight_cell ---
+    # --- kutucukları yakıp söndürme ---
     def highlight_cell(self, grid_labels, row, col, color, original_bg):
         highlight_duration = max(100, int(self.animation_speed * 0.6))
         if 0 <= row < len(grid_labels) and 0 <= col < len(grid_labels[row]):
@@ -313,7 +301,7 @@ class MemorySimulator:
                      label.config(bg=color)
                      label.after(highlight_duration, lambda lbl=label, orig_bg=original_bg: lbl.config(bg=orig_bg) if lbl.winfo_exists() else None)
 
-    # --- update_status, clear_grids, reset_simulation ---
+    # --- durumu güncelleme, TABLOLARI TEMİZLEME , simulasyonu sıfırlama ---
     def update_status(self, message): self.status_label.config(text=message)
     def clear_grids(self):
         for r in range(self.sram_rows):
@@ -329,7 +317,7 @@ class MemorySimulator:
         if self.report_window is not None and self.report_window.winfo_exists(): self.report_window.destroy(); self.report_window = None
 
     
-    # update_charts FONKSİYONU 
+    # GRAFİĞİ GÜNCELLEME FONKSİYONU 
     
     def update_charts(self):
         """Grafiği adım adım verilerle günceller ."""
@@ -347,7 +335,7 @@ class MemorySimulator:
             self.line_sram_energy.set_data(self.steps_history, self.sram_cumulative_energy_history)
             self.line_dram_energy.set_data(self.steps_history, self.dram_cumulative_energy_history)
 
-            # Grafik limitlerini otomatik ayarlama
+            # Grafik sınırlarını otomatik ayarlama
             
             self.ax1.relim()
             self.ax1.autoscale_view(tight=True)
@@ -358,7 +346,6 @@ class MemorySimulator:
             self.canvas.draw()
         except Exception as e:
              print(f"Grafik güncelleme hatası : {e}")
-             # Hata durumunda eksenleri sıfırlamayı dene
              try:
                  if hasattr(self, 'ax1'): self.ax1.set_xlim(0,1); self.ax1.set_ylim(0,1)
                  if hasattr(self, 'ax2'): self.ax2.set_ylim(0,1)
@@ -369,7 +356,8 @@ class MemorySimulator:
     
 
 
-    # --- show_final_report GÜNCEL (Erişim Sayısı ile) ---
+    # --- sonda gösterilen rapor ---
+
     def show_final_report(self):
         if self.step_count == 0: messagebox.showinfo("Rapor", "Simülasyon henüz çalışmadı veya tamamlanmadı."); return
         if self.report_window is not None and self.report_window.winfo_exists(): self.report_window.lift(); return
@@ -385,8 +373,8 @@ class MemorySimulator:
             for i, v in enumerate([final_sram_delay, final_dram_delay]): axes[0].text(i, v + 0.01 * max_delay, f"{v:.0f}", ha='center', va='bottom')
             axes[0].set_ylim(bottom=0)
             max_energy_for_scale = max(final_sram_energy, final_total_dram_energy, 1); axes[1].bar(['SRAM', 'DRAM Toplam'], [final_sram_energy, final_total_dram_energy], color=['deepskyblue', 'gold']); axes[1].set_ylabel("Toplam Enerji (pJ)"); axes[1].set_title("Toplam Enerji Tüketimi")
-            if final_dram_energy > 0.05 * max_energy_for_scale : axes[1].text(1, final_dram_energy / 2, f"Erişim\n{final_dram_energy:.1f} pJ", ha='center', va='center', color='white', weight='bold', fontsize='x-small')
-            if final_refresh_energy > 0.05 * max_energy_for_scale: axes[1].text(1, final_dram_energy + final_refresh_energy / 2, f"Refresh\n{final_refresh_energy:.1f} pJ", ha='center', va='center', color='white', weight='bold', fontsize='x-small')
+            if final_dram_energy > 0.05 * max_energy_for_scale : axes[1].text(1, final_dram_energy / 2, f"Erişim\n{final_dram_energy:.1f} pJ", ha='center', va='center', color='black', weight='bold', fontsize='x-small')
+            if final_refresh_energy > 0.05 * max_energy_for_scale: axes[1].text(1, final_dram_energy + final_refresh_energy / 2, f"Refresh\n{final_refresh_energy:.1f} pJ", ha='center', va='center', color='black', weight='bold', fontsize='x-small')
             axes[1].set_ylim(bottom=0); axes[1].text(0, final_sram_energy + 0.01 * max_energy_for_scale, f"{final_sram_energy:.1f}", ha='center', va='bottom'); axes[1].text(1, final_total_dram_energy + 0.01 * max_energy_for_scale, f"Toplam:{final_total_dram_energy:.1f}", ha='center', va='bottom', fontsize='small')
             axes[2].bar(['SRAM (HIT)', 'DRAM (MISS)'], [final_sram_access, final_dram_access], color=['lightskyblue','khaki']); axes[2].set_ylabel("Toplam Erişim Sayısı"); axes[2].set_title("Erişim Sayısı (HIT/MISS)")
             max_access = max(final_sram_access, final_dram_access, 1)
@@ -398,7 +386,7 @@ class MemorySimulator:
             messagebox.showerror("Rapor Hatası", f"Rapor grafiği oluşturulurken hata oluştu:\n{e}", parent=self.report_window); print(f"Rapor grafiği hatası: {e}"); import traceback; traceback.print_exc()
             if self.report_window and self.report_window.winfo_exists(): self.report_window.destroy(); self.report_window = None
 
-    # --- on_report_close, on_main_window_close ---
+    # --- ekran kapatma, rapor ekranını kapatma ---
     def on_report_close(self):
         if self.report_window:
             try:
