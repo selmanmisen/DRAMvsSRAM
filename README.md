@@ -20,7 +20,7 @@ At the bottom, the simulation provides a **live chart** that displays the **ener
 
 ---
 
-## How to Run the Simulation
+## To Run the Simulation
 
 ```bash
 pip install -r requirements.txt
