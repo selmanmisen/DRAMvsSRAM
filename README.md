@@ -1,22 +1,27 @@
-# DRAMvsSRAM
+# DRAM vs SRAM
 
-Basically this is a simulation of the "difference between DRAM and SRAM" explanation.
+This project is a simulation that demonstrates the difference between **DRAM and SRAM**.
 
-At the top, users enter some data (each character means one data).
+At the top of the interface, users can enter some data (each character represents a unit of data).
 
-Then the simulation starts with "Başlat" button.
+The simulation starts when the **"Başlat"** (Start) button is clicked.
 
-For each data, SRAM is first checked. If the data is not there, the system checks DRAM. We call this situation "cache miss".
-If it isn't there either,firstly the simulation writes the data to DRAM. Then the system writes to SRAM before selecting the next data.
-Thus, if system needs to use this data again, it can easily access data via SRAM.
+For each data element:
 
-Or system can find the data in SRAM, we call this situation "cache hit".
+- The system first checks **SRAM**.
+- If the data is **not found** in SRAM, it checks **DRAM**. This is called a **cache miss**.
+- If the data is **not in DRAM** either:
+  - The system first writes the data to DRAM.
+  - Then it writes the same data to SRAM.
+- If the system **finds** the data in SRAM, this is called a **cache hit**.
+- If **SRAM is full**, the system deletes the **least recently used** cell and writes the new data there. This process uses the **LRU (Least Recently Used) algorithm**.
 
-In another case, SRAM cells may be full. In this case system can delete the least used cell. Then the system writes new data in deleted cell. We call this algorithm 
- "LRU algortihm".
+At the bottom, the simulation provides a **live chart** that displays the **energy consumption** and **latency** of DRAM and SRAM step by step.
 
-At the bottom simulation gives a live chart. This chart can show the energy and latency for DRAM and SRAM step by step. 
+---
 
-For running the system:
+## How to Run the Simulation
+
+```bash
 pip install -r requirements.txt
 python sramvsdrm.py
