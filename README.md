@@ -16,3 +16,7 @@ In another case, SRAM cells may be full. In this case system can delete the leas
  "LRU algortihm".
 
 At the bottom simulation gives a live chart. This chart can show the energy and latency for DRAM and SRAM step by step. 
+
+For running the system:
+pip install -r requirements.txt
+python sramvsdrm.py
